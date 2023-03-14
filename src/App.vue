@@ -109,7 +109,7 @@
         <!-- Input component -->
         <InputTask          
           forTitle
-          inputPlaceholder="Escribe un nuevo título"
+          inputPlaceholder="Nuevo título"
           v-model="newListTitle"
           @onEnterDoThis="changeListTitle()"
         />

@@ -21,7 +21,7 @@
         :placeholder="inputPlaceholder"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-        @keyup.enter="$emit('onEnterDoThis')"
+        @keyup.enter.prevent="$emit('onEnterDoThis')"
     />
 </template>
 

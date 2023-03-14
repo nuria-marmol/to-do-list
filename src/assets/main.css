@@ -148,13 +148,13 @@ body {
   cursor: pointer;
 }
 
-.input {
-  width: fit-content;  
+.input { 
   border: transparent;  
   outline: none;
 }
 
 .input--task {
+  width: fit-content; 
   position: absolute;
   bottom: 1rem;
   padding: var(--size-s);
@@ -165,6 +165,7 @@ body {
 }
 
 .input--title {
+  width: 7.5rem;
   background-color: transparent;
   border: transparent;
   text-align: center;
