@@ -110,12 +110,11 @@
         <InputTask          
           forTitle
           inputPlaceholder="Nuevo título"
-          v-model="newListTitle"
-          @onEnterDoThis="changeListTitle()"
+          v-model="newListTitle"          
         />
       </label>
-    </div> 
-    <figure>
+    </div>
+    <div class="header__icons">
       <img 
         v-if="!toBeChanged"
         src="./assets/icons/pencil.png" 
@@ -123,12 +122,19 @@
         @click="enableEdit()" 
       />
       <img
-        v-else 
+        v-if="toBeChanged"
+        src="./assets/icons/pencil.png" 
+        alt="Editar título de la lista" 
+        @click="changeListTitle()"
+      />
+      <img
+        v-if="toBeChanged"
+        class="header-icons__last"
         src="./assets/icons/x.png" 
         alt="Cancelar edición" 
         @click="cancelEdit()"
       />
-    </figure>
+    </div>
   </header>
 
   <main class="tasks">
