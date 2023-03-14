@@ -14,13 +14,12 @@ ul {
   margin: unset;
 }
 
-h1 {
-  font-size: 1.5rem;
-}
-
-
 ul {
   padding-left: unset;
+}
+
+h1 {
+  font-size: 1.5rem;
 }
 
 /* Custom scrollbar for tasks list */
@@ -51,8 +50,20 @@ body {
 }
 
 .header {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: .75rem;
   margin-bottom: 2rem;
-  text-align: center;
+}
+
+.header > figure {
+  margin: unset;
+}
+
+.header img {
+  width: 1rem;
+  cursor: pointer;
 }
 
 .tasks__message {
@@ -64,18 +75,14 @@ body {
   overflow-y: auto;
 }
 
-.tasks__item,
-.input {
-  padding: var(--size-s);
-  background-color: var(--color-white);
-  border-radius: var(--size-xxs);
-  box-sizing: border-box;
-}
-
 .tasks__item {
   display: flex;
   align-items: center;
   width: 95%;
+  padding: var(--size-s);
+  background-color: var(--color-white);
+  border-radius: var(--size-xxs);
+  box-sizing: border-box;
 }
 
 .tasks__item:not(.tasks__item:last-child) {
@@ -142,10 +149,24 @@ body {
 }
 
 .input {
+  width: fit-content;  
+  border: transparent;  
+  outline: none;
+}
+
+.input--task {
   position: absolute;
   bottom: 1rem;
-  width: fit-content;
-  border: transparent; 
-  outline: none;
+  padding: var(--size-s);
+  background-color: var(--color-white);
+  border-radius: var(--size-xxs);
+  box-sizing: border-box;  
   font-size: .9rem;
+}
+
+.input--title {
+  background-color: transparent;
+  border: transparent;
+  text-align: center;
+  font-size: 1.4rem;
 }

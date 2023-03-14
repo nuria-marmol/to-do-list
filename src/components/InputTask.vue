@@ -1,14 +1,24 @@
 <script setup>
- defineProps({
-    modelValue: String
- })
+    defineProps({    
+        forTask: {
+            type: Boolean,
+            default: false
+        },
+        forTitle: {
+            type: Boolean,
+            default: false
+        },
+        inputPlaceholder: String,
+        modelValue: String
+    })
 </script>
 
 <template>
-    <input
+    <input        
         type="text"
         class="input"
-        placeholder="Añade una nueva tarea"
+        :class="{ 'input--task': forTask, 'input--title': forTitle }"
+        :placeholder="inputPlaceholder"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         @keyup.enter="$emit('onEnterDoThis')"
