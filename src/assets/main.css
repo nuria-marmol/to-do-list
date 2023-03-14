@@ -60,7 +60,7 @@ body {
 }
 
 .tasks__list {
-  height: 20rem;
+  height: 22rem;
   overflow-y: auto;
 }
 
