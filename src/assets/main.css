@@ -178,7 +178,7 @@ body {
 }
 
 .input--task {
-  width: fit-content;
+  width: 15rem;
   position: absolute;
   bottom: 1rem;
   padding: var(--size-s);

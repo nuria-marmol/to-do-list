@@ -284,7 +284,7 @@
         <!-- Input component -->
         <InputTask
           forTask
-          inputPlaceholder="Añade una nueva tarea"
+          inputPlaceholder="Escribe una tarea y pulsa Enter"
           v-model="newTask"
           @onEnterDoThis="addTask()"
         />
