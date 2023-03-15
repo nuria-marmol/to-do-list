@@ -208,6 +208,26 @@
       Vaya, esto está vacío. Pero que no cunda el pánico: en cuanto añadas una tarea, se mostrará aquí.
     </p>
 
+    <menu v-if="!noTasks" class="tasks__filter">
+      <li 
+        class="tasks-filter__item" 
+        :class="{ 'tasks-filter__item--active': showAll }"
+        @click="enableShowAll()" 
+      >Todas</li>
+      <li>|</li>
+      <li 
+        class="tasks-filter__item" 
+        :class="{ 'tasks-filter__item--active': !showChecked && !showAll }"
+        @click="enableShowPending()"
+      >Pendientes</li>
+      <li>|</li>
+      <li 
+        class="tasks-filter__item" 
+        :class="{ 'tasks-filter__item--active': showChecked }"
+        @click="enableShowChecked"
+      >Completadas</li>
+    </menu>
+
     <menu v-if="!noTasks" class="tasks__list">
       <li 
         v-if="zeroPending"
@@ -257,26 +277,6 @@
             />
         </div>
       </li>      
-    </menu>
-
-    <menu v-if="!noTasks" class="tasks__filter">
-      <li 
-        class="tasks-filter__item" 
-        :class="{ 'tasks-filter__item--active': showAll }"
-        @click="enableShowAll()" 
-      >Todas</li>
-      <li>|</li>
-      <li 
-        class="tasks-filter__item" 
-        :class="{ 'tasks-filter__item--active': !showChecked && !showAll }"
-        @click="enableShowPending()"
-      >Pendientes</li>
-      <li>|</li>
-      <li 
-        class="tasks-filter__item" 
-        :class="{ 'tasks-filter__item--active': showChecked }"
-        @click="enableShowChecked" 
-      >Completadas</li>
     </menu>
 
     <div>   
