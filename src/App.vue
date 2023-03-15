@@ -10,8 +10,8 @@
   const zeroPending = ref(true)
   const zeroCompleted = ref(false)
   const allTasks = ref([]) // array with saved tasks
-  const showChecked = ref(false)
-  const showAll = ref(true)
+  const showChecked = ref(false) // for filtering
+  const showAll = ref(true) // for filtering
   const newTask = ref('') // input v-model
   const checkbox = ref(false)
 
@@ -94,10 +94,12 @@
     showAll.value = false
   }
 
-  function disableShowChecked() {
+  /**
+  * Enabling filtering by pending tasks
+  */
+  function enableShowPending() {
     showChecked.value = false
     showAll.value = false
-
   }
 
   function enableShowAll() {
@@ -105,34 +107,39 @@
     showChecked.value = false
   }
 
-  function filteredTasks() { 
-    
+  // Function in v-for
+  function filteredTasks() {  
     // When the user wants to filter by checked tasks
-    if (showChecked.value) {      
-      const filtered = allTasks.value.filter(function (task) {
+    if (showChecked.value) {    
+      const checkedTasks = allTasks.value.filter(function (task) {
         return task.checked
       })
 
-      if (filtered.length === 0) {
+      if (checkedTasks.length === 0) {
         zeroPending.value = false
         zeroCompleted.value = true
       }
+
+      // Avoid showing 'No pending tasks' paragraph
       zeroPending.value = false
-      return filtered
+      return checkedTasks
+
     // Filter by pending tasks
     } else if (!showChecked.value && !showAll.value) {
-      const filtered2 = allTasks.value.filter(function (task) {
+      const pendingTasks = allTasks.value.filter(function (task) {
         return !task.checked
       })
 
-      if (filtered2.length === 0) {
+      if (pendingTasks.length === 0) {
         zeroCompleted.value = false
         zeroPending.value = true
       }
       
+      // Avoid showing 'No completed tasks' paragraph
       zeroCompleted.value = false
-      return filtered2
+      return pendingTasks
     }
+      // For showing all tasks
       zeroCompleted.value = false
       zeroPending.value = false
       return allTasks.value
@@ -200,6 +207,7 @@
     >
       Vaya, esto está vacío. Pero que no cunda el pánico: en cuanto añadas una tarea, se mostrará aquí.
     </p>
+
     <menu v-if="!noTasks" class="tasks__list">
       <li 
         v-if="zeroPending"
@@ -261,7 +269,7 @@
       <li 
         class="tasks-filter__item" 
         :class="{ 'tasks-filter__item--active': !showChecked && !showAll }"
-        @click="disableShowChecked()"
+        @click="enableShowPending()"
       >Pendientes</li>
       <li>|</li>
       <li 
