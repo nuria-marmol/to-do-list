@@ -10,12 +10,13 @@
 body,
 h1,
 p,
-ul {
+menu {
   margin: unset;
 }
 
-ul {
+menu {
   padding-left: unset;
+  list-style: none;
 }
 
 h1 {
@@ -71,7 +72,7 @@ body {
 }
 
 .tasks__list {
-  height: 22rem;
+  height: 19rem;
   overflow-y: auto;
 }
 
@@ -146,6 +147,27 @@ body {
 .tasks-item__text-group > img {
   width: var(--size-s);
   cursor: pointer;
+}
+
+.tasks__filter {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--size-xs);
+  margin-top: var(--size-xs);
+  font-size: .8rem;
+  cursor: pointer;
+}
+
+.tasks-filter__item {
+  transition: .5s;
+}
+
+.tasks-filter__item--active {
+  color: var(--color-white);
+}
+
+.tasks-filter__item:hover {
+  color: var(--color-white);
 }
 
 .input { 

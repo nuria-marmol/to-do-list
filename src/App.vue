@@ -7,7 +7,11 @@
   const listTitle = ref('Tareas')
   const newListTitle = ref('') // input v-model
   const noTasks = ref(true) // paragraph showing 'No tasks...'
+  const zeroPending = ref(true)
+  const zeroCompleted = ref(false)
   const allTasks = ref([]) // array with saved tasks
+  const showChecked = ref(false)
+  const showAll = ref(true)
   const newTask = ref('') // input v-model
   const checkbox = ref(false)
 
@@ -82,6 +86,58 @@
       updateStoragedTasks()
   }
 
+  /**
+  * Enabling filtering by checked tasks
+  */
+  function enableShowChecked() {
+    showChecked.value = true
+    showAll.value = false
+  }
+
+  function disableShowChecked() {
+    showChecked.value = false
+    showAll.value = false
+
+  }
+
+  function enableShowAll() {
+    showAll.value = true
+    showChecked.value = false
+  }
+
+  function filteredTasks() { 
+    
+    // When the user wants to filter by checked tasks
+    if (showChecked.value) {      
+      const filtered = allTasks.value.filter(function (task) {
+        return task.checked
+      })
+
+      if (filtered.length === 0) {
+        zeroPending.value = false
+        zeroCompleted.value = true
+      }
+      zeroPending.value = false
+      return filtered
+    // Filter by pending tasks
+    } else if (!showChecked.value && !showAll.value) {
+      const filtered2 = allTasks.value.filter(function (task) {
+        return !task.checked
+      })
+
+      if (filtered2.length === 0) {
+        zeroCompleted.value = false
+        zeroPending.value = true
+      }
+      
+      zeroCompleted.value = false
+      return filtered2
+    }
+      zeroCompleted.value = false
+      zeroPending.value = false
+      return allTasks.value
+  }
+
   onMounted(() => {
     // Reading localStorage
     const storagedList = JSON.parse(window.localStorage.getItem('list'))
@@ -139,14 +195,26 @@
 
   <main class="tasks">
     <p 
-      v-if="noTasks" 
+      v-if="noTasks"
       class="tasks__message"
     >
       Vaya, esto está vacío. Pero que no cunda el pánico: en cuanto añadas una tarea, se mostrará aquí.
     </p>
-    <ul v-else class="tasks__list">        
+    <menu v-if="!noTasks" class="tasks__list">
       <li 
-        v-for="(task, index) in allTasks"
+        v-if="zeroPending"
+        class="tasks__message"
+      >
+        No tienes tareas pendientes.
+      </li>
+      <li 
+        v-if="zeroCompleted"
+        class="tasks__message"
+      >
+        No tienes tareas completadas.
+      </li>       
+      <li 
+        v-for="(task, index) in filteredTasks()"
         v-bind:key="task.id"
         class="tasks__item"
       >
@@ -181,7 +249,27 @@
             />
         </div>
       </li>      
-    </ul>
+    </menu>
+
+    <menu v-if="!noTasks" class="tasks__filter">
+      <li 
+        class="tasks-filter__item" 
+        :class="{ 'tasks-filter__item--active': showAll }"
+        @click="enableShowAll()" 
+      >Todas</li>
+      <li>|</li>
+      <li 
+        class="tasks-filter__item" 
+        :class="{ 'tasks-filter__item--active': !showChecked && !showAll }"
+        @click="disableShowChecked()"
+      >Pendientes</li>
+      <li>|</li>
+      <li 
+        class="tasks-filter__item" 
+        :class="{ 'tasks-filter__item--active': showChecked }"
+        @click="enableShowChecked" 
+      >Completadas</li>
+    </menu>
 
     <div>   
       <label>
