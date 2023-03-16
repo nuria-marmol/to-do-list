@@ -1,5 +1,5 @@
 <script setup>
-  import InputTask from './components/InputTask.vue'
+  import InputComponent from './components/InputComponent.vue'
 
   import { ref, onMounted } from 'vue'
 
@@ -40,11 +40,9 @@
     window.localStorage.setItem('title', listTitle.value)
   }
 
-  /** 
-  * Creating id from written task
-  */
   function generateId() {
-    return newTask.value.trim().toLowerCase().replace(/ /g, '-')
+    // Milliseconds since 1st January 1970
+    return Date.now()
   }
 
   function updateStoragedTasks() {
@@ -67,12 +65,14 @@
     })
     updateStoragedTasks()
     // Clearing input
-    newTask.value = ''            
+    newTask.value = ''          
   }
 
-  function deleteTask(index) {
+  function deleteTask(task) {
+    // Avoid deleting wrong position when seeing Pending or Completed
+    const realIndex = allTasks.value.indexOf(task)
     // On that position, remove 1 element
-    allTasks.value.splice(index, 1)
+    allTasks.value.splice(realIndex, 1)
     updateStoragedTasks()
     // In case we delete all tasks
     if (allTasks.value.length === 0) {
@@ -170,7 +170,7 @@
     <div v-else>
       <label>
         <!-- Input component -->
-        <InputTask          
+        <InputComponent          
           forTitle
           inputPlaceholder="Nuevo título"
           v-model="newListTitle"          
@@ -212,7 +212,7 @@
       <li 
         class="tasks-filter__item" 
         :class="{ 'tasks-filter__item--active': showAll }"
-        @click="enableShowAll()" 
+        @click="enableShowAll()"
       >Todas</li>
       <li>|</li>
       <li 
@@ -241,7 +241,7 @@
       >
         No tienes tareas completadas.
       </li>       
-      <li 
+      <li
         v-for="(task, index) in filteredTasks()"
         v-bind:key="task.id"
         class="tasks__item"
@@ -273,7 +273,7 @@
             <img 
                 src="./assets/icons/delete.png"
                 alt="Eliminar tarea"
-                @click="deleteTask(index)"
+                @click="deleteTask(task)"
             />
         </div>
       </li>      
@@ -282,7 +282,7 @@
     <div>   
       <label>
         <!-- Input component -->
-        <InputTask
+        <InputComponent
           forTask
           inputPlaceholder="Escribe una tarea y pulsa Enter"
           v-model="newTask"
