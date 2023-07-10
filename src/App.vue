@@ -14,7 +14,6 @@
   const showChecked = ref(false) // for filtering
   const showAll = ref(true) // for filtering
   const newTask = ref('') // input v-model
-  const checkbox = ref(false)
 
   /**
   * Enabling list title edit
@@ -258,7 +257,8 @@
               type="checkbox"
               :id="task.id"
               class="tasks-item__checkbox"                
-              v-model="task.checked"              
+              v-model="task.checked"
+              @change="updateStoragedTasks"             
             />            
             <!-- Changing background colour when checked -->
             <div 
@@ -277,9 +277,9 @@
             <!-- Line-through when checked -->
             <span :class="{ done: task.checked }">{{ task.title }}</span>
             <img 
-                src="./assets/icons/delete.png"
-                alt="Eliminar tarea"
-                @click="deleteTask(task)"
+              src="./assets/icons/delete.png"
+              alt="Eliminar tarea"
+              @click="deleteTask(task)"
             />
           </div>
         </li>  
