@@ -16,6 +16,7 @@
 <template>
     <input        
         type="text"
+        name="task-to-do"
         class="input"
         :class="{ 'input--task': forTask, 'input--title': forTitle }"
         :placeholder="inputPlaceholder"

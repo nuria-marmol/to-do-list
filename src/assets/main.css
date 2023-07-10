@@ -99,6 +99,7 @@ body {
 
 /* Hiding default checkbox */
 .tasks-item__checkbox {
+  position: relative;
   z-index: 2;
   margin: 0;
   width: var(--size-s);

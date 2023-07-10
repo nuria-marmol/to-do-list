@@ -1,5 +1,5 @@
 <script setup>
-  import InputComponent from './components/InputComponent.vue'
+  import InputText from './components/InputText.vue'
 
   import { ref, onMounted } from 'vue'
   import { VueDraggableNext as draggable } from 'vue-draggable-next'
@@ -172,7 +172,7 @@
     <div v-else>
       <label>
         <!-- Input component -->
-        <InputComponent          
+        <InputText          
           forTitle
           inputPlaceholder="Nuevo título"
           v-model="newListTitle"          
@@ -252,14 +252,15 @@
           class="tasks__item"                    
         >
           <div>
-            <label :for="task.id"></label>
-            <input
-              type="checkbox"
-              :id="task.id"
-              class="tasks-item__checkbox"                
-              v-model="task.checked"
-              @change="updateStoragedTasks"             
-            />            
+            <label>
+              <input
+                type="checkbox"
+                :id="task.id"
+                class="tasks-item__checkbox"                
+                v-model="task.checked"
+                @change="updateStoragedTasks"             
+              />   
+            </label>         
             <!-- Changing background colour when checked -->
             <div 
               class="tasks-item__custom-checkbox"
@@ -289,7 +290,7 @@
     <div>   
       <label>
         <!-- Input component -->
-        <InputComponent
+        <InputText
           forTask
           inputPlaceholder="Escribe una tarea y pulsa Enter"
           v-model="newTask"
