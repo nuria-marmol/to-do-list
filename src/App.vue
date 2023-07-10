@@ -2,6 +2,7 @@
   import InputComponent from './components/InputComponent.vue'
 
   import { ref, onMounted } from 'vue'
+  import { VueDraggableNext as draggable } from 'vue-draggable-next'
 
   const toBeChanged = ref(false) // set to true when editing title
   const listTitle = ref('Tareas')
@@ -145,6 +146,13 @@
       return allTasks.value
   }
 
+  /**
+  * When the user drags a task and changes its order, we save those changes
+  */
+  function saveItemsOrder() {
+    updateStoragedTasks()
+  }
+
   onMounted(() => {
     // Reading localStorage
     const storagedList = JSON.parse(window.localStorage.getItem('list'))
@@ -228,56 +236,60 @@
       >Completadas</li>
     </menu>
 
-    <menu v-if="!noTasks" class="tasks__list">
-      <li 
+    <div v-if="!noTasks" class="tasks__list">
+      <p 
         v-if="zeroPending"
         class="tasks__message"
       >
         No tienes tareas pendientes.
-      </li>
-      <li 
+      </p>
+      <p 
         v-if="zeroCompleted"
         class="tasks__message"
       >
         No tienes tareas completadas.
-      </li>       
-      <li
-        v-for="(task, index) in filteredTasks()"
-        v-bind:key="task.id"
-        class="tasks__item"
-      >
-        <div>
-            <input
-                type="checkbox"
-                :id="task.id"
-                class="tasks-item__checkbox"                 
-                v-model="checkbox"
-                @change="toggleCheckbox(task)"
-            />
-            <!-- Changing background colour when checked -->
-            <div 
-                class="tasks-item__custom-checkbox"
-                :class="{'tasks-item__custom-checkbox--checked': task.checked }"
-            />
-            <!-- Showing when checked -->
-            <img           
-                class="tasks-item__checkmark"
-                :class="{ 'tasks-item__checkmark--show': task.checked }"       
-                src="./assets/icons/checkmarks.png"
-                alt="checkmark"
-            />
-        </div>
-        <div class="tasks-item__text-group">
-            <!-- Line-through when checked -->
-            <span :class="{ done: task.checked }">{{ task.title }}</span>
-            <img 
-                src="./assets/icons/delete.png"
-                alt="Eliminar tarea"
-                @click="deleteTask(task)"
-            />
-        </div>
-      </li>      
-    </menu>
+      </p>
+
+      <!-- Draggable tasks -->
+      <draggable tag="menu" :list="allTasks" @end="saveItemsOrder">
+        <li
+          v-for="(task, index) in filteredTasks()"
+          v-bind:key="task.id"
+          class="tasks__item"                    
+        >
+          <div>
+              <input
+                  type="checkbox"
+                  :id="task.id"
+                  class="tasks-item__checkbox"                 
+                  v-model="checkbox"
+                  @change="toggleCheckbox(task)"
+              />
+              <!-- Changing background colour when checked -->
+              <div 
+                  class="tasks-item__custom-checkbox"
+                  :class="{'tasks-item__custom-checkbox--checked': task.checked }"
+              />
+              <!-- Showing when checked -->
+              <img           
+                  class="tasks-item__checkmark"
+                  :class="{ 'tasks-item__checkmark--show': task.checked }"       
+                  src="./assets/icons/checkmarks.png"
+                  alt="checkmark"
+              />
+          </div>
+          <div class="tasks-item__text-group">
+              <!-- Line-through when checked -->
+              <span :class="{ done: task.checked }">{{ task.title }}</span>
+              <img 
+                  src="./assets/icons/delete.png"
+                  alt="Eliminar tarea"
+                  @click="deleteTask(task)"
+              />
+          </div>
+        </li>  
+      </draggable>     
+    </div>
 
     <div>   
       <label>
