@@ -2,7 +2,6 @@
   import InputText from './components/InputText.vue'
 
   import { ref, onMounted } from 'vue'
-  import { VueDraggableNext as draggable } from 'vue-draggable-next'
 
   const toBeChanged = ref(false) // set to true when editing title
   const listTitle = ref('Tareas')
@@ -245,7 +244,7 @@
       </p>
 
       <!-- Draggable tasks -->
-      <draggable tag="menu" :list="allTasks" @end="saveItemsOrder">
+      <menu>
         <li
           v-for="(task, index) in filteredTasks()"
           v-bind:key="task.id"
@@ -284,7 +283,7 @@
             />
           </div>
         </li>  
-      </draggable>     
+      </menu>     
     </div>
 
     <div>   
