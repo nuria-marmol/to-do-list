@@ -13,6 +13,7 @@
   const showChecked = ref(false) // for filtering
   const showAll = ref(true) // for filtering
   const newTask = ref('') // input v-model
+  const draggedItemIndex = ref(null) // for drag and drop
 
   /**
   * Enabling list title edit
@@ -139,8 +140,42 @@
       return allTasks.value
   }
 
+  // ------ Drag and drop functions ------
   /**
-  * When the user drags a task and changes its order, we save those changes
+  * Getting the index of the dragged task on dragstart
+  */
+  function getDraggedItemIndex(task) {
+    // Avoid getting wrong index when seeing Pending or Completed
+    draggedItemIndex.value = allTasks.value.indexOf(task)
+  }
+
+  /**
+  * Changing the order of the dragged task on draggover
+  */
+  function reorderItems(task) {
+    // Avoid taking wrong position when seeing Pending or Completed
+    const realIndex = allTasks.value.indexOf(task)
+    // If the user is moving the task on top of another one
+    if (realIndex !== draggedItemIndex.value) {
+        const draggedItem = allTasks.value[draggedItemIndex.value];
+        // Deleting the dragged item on its initial position
+        allTasks.value.splice(draggedItemIndex.value, 1);
+        // Adding the dragged item on new item's position
+        allTasks.value.splice(realIndex, 0, draggedItem);
+        /* Now the dragged item should have the index of the item that it has replaced */
+        draggedItemIndex.value = realIndex;
+      }
+  }
+
+  /**
+  * Resetting the index of the dragged task on dragend
+  */
+  function resetDraggedItemIndex() {       
+    draggedItemIndex.value = null
+  }
+
+  /**
+  * When the user drops a task and changes its order, we save those changes
   */
   function saveItemsOrder() {
     updateStoragedTasks()
@@ -246,9 +281,14 @@
       <!-- Draggable tasks -->
       <menu>
         <li
-          v-for="(task, index) in filteredTasks()"
+          v-for="task in filteredTasks()"
           v-bind:key="task.id"
-          class="tasks__item"                    
+          class="tasks__item"
+          draggable="true"
+          @dragstart="getDraggedItemIndex(task)"            
+          @dragover.prevent="reorderItems(task)"                              
+          @dragend="resetDraggedItemIndex"
+          @drop="saveItemsOrder" 
         >
           <div>
             <label>
