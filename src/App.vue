@@ -63,7 +63,9 @@
     allTasks.value.push({
       id: generateId(),
       title: newTask.value.trim(), // input v-model
-      checked: false
+      checked: false,
+      enterAnimation: true,
+      leaveAnimation: false
     })
     updateStoragedTasks()
     // Clearing input
@@ -74,23 +76,39 @@
     }        
   }
 
-  function deleteTask(task) {
+  function deleteTask(task) {  
+     task.enterAnimation = false
+     task.leaveAnimation = true
     // Avoid deleting wrong position when seeing Pending or Completed
     const realIndex = allTasks.value.indexOf(task)
-    // On that position, remove 1 element
-    allTasks.value.splice(realIndex, 1)
-    updateStoragedTasks()
-    // In case we delete all tasks
-    if (allTasks.value.length === 0) {
-      // Show 'There are no tasks...' paragraph
-      noTasks.value = true
-    }
+    // Wait for the enter animation to end
+    setTimeout(function () {
+      // On that position, remove 1 element
+      allTasks.value.splice(realIndex, 1)
+      updateStoragedTasks()
+      // In case we delete all tasks
+      if (allTasks.value.length === 0) {
+        // Show 'There are no tasks...' paragraph
+        noTasks.value = true
+      }
+    }, 500)
+  }  
+
+  /**
+  * For seeing animation only when manually adding or deleting a task
+  * (not when filtering or reading localStorage)
+  */
+  function preventAutomaticAnimation() {
+    allTasks.value.forEach(function (task) {
+      task.enterAnimation = false
+    })
   }
 
   /**
   * Enabling filtering by checked tasks
   */
   function enableShowChecked() {
+    preventAutomaticAnimation()
     showChecked.value = true
     showAll.value = false
   }
@@ -99,6 +117,7 @@
   * Enabling filtering by pending tasks
   */
   function enableShowPending() {
+    preventAutomaticAnimation()
     showChecked.value = false
     showAll.value = false
   }
@@ -109,9 +128,9 @@
   }
 
   // Function in v-for
-  function filteredTasks() {  
+  function filteredTasks() {
     // When the user wants to filter by checked tasks
-    if (showChecked.value) {    
+    if (showChecked.value) { 
       const checkedTasks = allTasks.value.filter(function (task) {
         return task.checked
       })
@@ -140,10 +159,10 @@
       zeroCompleted.value = false
       return pendingTasks
     }
-      // For showing all tasks
-      zeroCompleted.value = false
-      zeroPending.value = false
-      return allTasks.value
+    // For showing all tasks
+    zeroCompleted.value = false
+    zeroPending.value = false
+    return allTasks.value
   }
 
   // ------ Drag and drop functions ------
@@ -163,14 +182,15 @@
     const realIndex = allTasks.value.indexOf(task)
     // If the user is moving the task on top of another one
     if (realIndex !== draggedItemIndex.value) {
-        const draggedItem = allTasks.value[draggedItemIndex.value];
-        // Deleting the dragged item on its initial position
-        allTasks.value.splice(draggedItemIndex.value, 1);
-        // Adding the dragged item on new item's position
-        allTasks.value.splice(realIndex, 0, draggedItem);
-        /* Now the dragged item should have the index of the item that it has replaced */
-        draggedItemIndex.value = realIndex;
-      }
+      const draggedItem = allTasks.value[draggedItemIndex.value];
+      // Deleting the dragged item on its initial position
+      allTasks.value.splice(draggedItemIndex.value, 1);
+      // Adding the dragged item on new item's position
+      allTasks.value.splice(realIndex, 0, draggedItem);
+      /* Now the dragged item should have
+      the index of the item that it has replaced */
+      draggedItemIndex.value = realIndex;
+    }
   }
 
   /**
@@ -178,13 +198,6 @@
   */
   function resetDraggedItemIndex() {
     draggedItemIndex.value = null
-  }
-
-  /**
-  * When the user drops a task and changes its order, we save those changes
-  */
-  function saveItemsOrder() {
-    updateStoragedTasks()
   }
 
   onMounted(() => {
@@ -197,6 +210,7 @@
       noTasks.value = false
       // Moving the storaged tasks to the array we are going to loop through
       allTasks.value = storagedList
+      preventAutomaticAnimation()
     }
     // If there is a storaged title already
     if (storagedTitle) {
@@ -290,11 +304,12 @@
           v-for="task in filteredTasks()"
           v-bind:key="task.id"
           class="tasks__item"
+          :class="{ 'tasks__item--show': task.enterAnimation, 'tasks__item--hide': task.leaveAnimation }"          
           draggable="true"
           @dragstart="getDraggedItemIndex(task)"            
           @dragover.prevent="reorderItems(task)"                              
           @dragend="resetDraggedItemIndex"
-          @drop="saveItemsOrder"
+          @drop="updateStoragedTasks"
         >
           <div>
             <label>
@@ -303,7 +318,7 @@
                 :id="task.id"
                 class="tasks-item__checkbox"                
                 v-model="task.checked"
-                @change="updateStoragedTasks"             
+                @change="updateStoragedTasks"     
               />   
             </label>         
             <!-- Changing background colour when checked -->
