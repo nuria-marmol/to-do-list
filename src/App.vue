@@ -170,6 +170,7 @@
   * Getting the index of the dragged task on dragstart
   */
   function getDraggedItemIndex(task) {
+    preventAutomaticAnimation()
     // Avoid getting wrong index when seeing Pending or Completed
     draggedItemIndex.value = allTasks.value.indexOf(task)
   }
