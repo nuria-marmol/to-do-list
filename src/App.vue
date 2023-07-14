@@ -49,11 +49,13 @@
     window.localStorage.setItem('list', JSON.stringify(allTasks.value))
   }
 
-  function addTask(task) {
+  /**
+  * Adding new task to the list
+  */ 
+  function addTask() {
     // Do not add task if input is empty or only has blank spaces
     if (newTask.value.trim() === '') {
       newTask.value = ''
-      return
     }
     // Hiding the paragraph 'No tienes tareas...'
     noTasks.value = false
@@ -65,7 +67,11 @@
     })
     updateStoragedTasks()
     // Clearing input
-    newTask.value = ''          
+    newTask.value = ''
+    // Showing All tasks again if the task has been added when seeing Completed
+    if (showChecked.value) {
+      enableShowAll()
+    }        
   }
 
   function deleteTask(task) {
@@ -152,7 +158,7 @@
   /**
   * Changing the order of the dragged task on draggover
   */
-  function reorderItems(task) {
+  function reorderItems(task) {    
     // Avoid taking wrong position when seeing Pending or Completed
     const realIndex = allTasks.value.indexOf(task)
     // If the user is moving the task on top of another one
@@ -170,7 +176,7 @@
   /**
   * Resetting the index of the dragged task on dragend
   */
-  function resetDraggedItemIndex() {       
+  function resetDraggedItemIndex() {
     draggedItemIndex.value = null
   }
 
@@ -288,7 +294,7 @@
           @dragstart="getDraggedItemIndex(task)"            
           @dragover.prevent="reorderItems(task)"                              
           @dragend="resetDraggedItemIndex"
-          @drop="saveItemsOrder" 
+          @drop="saveItemsOrder"
         >
           <div>
             <label>
@@ -323,7 +329,7 @@
             />
           </div>
         </li>  
-      </menu>     
+      </menu>
     </div>
 
     <div>   
