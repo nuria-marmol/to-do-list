@@ -1,16 +1,16 @@
 <script setup>
-    defineProps({    
-        forTask: {
-            type: Boolean,
-            default: false
-        },
-        forTitle: {
-            type: Boolean,
-            default: false
-        },
-        inputPlaceholder: String,
-        modelValue: String
-    })
+defineProps({    
+    forTask: {
+        type: Boolean,
+        default: false
+    },
+    forTitle: {
+        type: Boolean,
+        default: false
+    },
+    inputPlaceholder: String,
+    modelValue: String
+})
 </script>
 
 <template>

@@ -58,6 +58,7 @@ body {
   margin-bottom: 2rem;
 }
 
+/* Pencil and x icons */
 .header__icons > img {
   width: var(--size-s);
   cursor: pointer;
@@ -111,16 +112,17 @@ for avoiding jump when filtering */
   }
 }
 
+/* Applying enter and leave animations */
 .tasks__item--show {
   animation-name: task-enter;
-  animation-duration: .5s;
-  animation-iteration-count: 1;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
 }
 
 .tasks__item--hide {
   animation-name: task-leave;
+}
+
+.tasks__item--show,
+.tasks__item--hide {
   animation-duration: .5s;
   animation-iteration-count: 1;
   animation-timing-function: linear;
@@ -198,6 +200,14 @@ for avoiding jump when filtering */
   margin-bottom: var(--size-s);
   font-size: .8rem;
   cursor: pointer;
+}
+
+.tasks__filter > hr {
+  width: 1px;
+  height: var(--size-s);
+  margin: unset;
+  border: unset;
+  background-color: var(--color-black);
 }
 
 .tasks-filter__item {
