@@ -72,6 +72,37 @@ body {
   text-align: center;
 }
 
+.tasks__filter {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--size-s);
+  margin-bottom: var(--size-s);
+  font-size: .8rem;
+  cursor: pointer;
+}
+
+.tasks__filter > hr {
+  width: 1px;
+  height: var(--size-s);
+  margin: unset;
+  border: unset;
+  background-color: var(--color-black);
+}
+
+.tasks-filter__item {
+  transition: .5s;
+}
+
+.tasks-filter__item--active {
+  color: var(--color-white);
+  text-shadow: 1px 1px 3px var(--color-black);
+}
+
+.tasks-filter__item:hover {
+  color: var(--color-white);
+  text-shadow: 1px 1px 3px var(--color-black);
+}
+
 .tasks__list {
   max-height: 19rem;
   overflow-y: auto;
@@ -80,6 +111,7 @@ body {
 .tasks__item {
   display: flex;
   align-items: center;
+  /* This way the element won't be cut off during the animation */
   width: 95%;
   padding: var(--size-s);
   background-color: var(--color-white);
@@ -193,33 +225,22 @@ for avoiding jump when filtering */
   cursor: pointer;
 }
 
-.tasks__filter {
-  display: flex;
-  justify-content: flex-start;
-  gap: var(--size-s);
-  margin-bottom: var(--size-s);
-  font-size: .8rem;
+/* Delete completed tasks button */
+.tasks__delete-completed {
+  /* For being aligned with the list */
+  width: 95%;
+  text-align: right;
+}
+
+.tasks__delete-completed > button {
+  margin-top: var(--size-xxs);
+  background-color: transparent;
+  border: transparent;
   cursor: pointer;
-}
-
-.tasks__filter > hr {
-  width: 1px;
-  height: var(--size-s);
-  margin: unset;
-  border: unset;
-  background-color: var(--color-black);
-}
-
-.tasks-filter__item {
   transition: .5s;
 }
 
-.tasks-filter__item--active {
-  color: var(--color-white);
-  text-shadow: 1px 1px 3px var(--color-black);
-}
-
-.tasks-filter__item:hover {
+.tasks__delete-completed > button:hover {
   color: var(--color-white);
   text-shadow: 1px 1px 3px var(--color-black);
 }

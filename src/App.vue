@@ -1,7 +1,7 @@
 <script setup>
 import InputText from './components/InputText.vue'
 
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 const toBeChanged = ref(false) // for editing title
 const listTitle = ref('Tareas')
@@ -84,12 +84,12 @@ function addTask() {
 }
 
 function deleteTask(task) {  
-    task.enterAnimation = false
-    task.leaveAnimation = true
+  task.enterAnimation = false
+  task.leaveAnimation = true
   // Avoid deleting wrong position when seeing Pending or Completed
   const realIndex = allTasks.value.indexOf(task)
   
-  // Wait for the enter animation to end
+  // Wait for the animation to end
   setTimeout(function () {
     // On that position, remove 1 element
     allTasks.value.splice(realIndex, 1)
@@ -101,6 +101,27 @@ function deleteTask(task) {
     }
   }, 500)
 }  
+
+function deleteCompletedTasks() {
+  const completed = allTasks.value.filter(function (task) {
+    return task.checked
+  })
+  const notCompleted = allTasks.value.filter(function (task) {
+    return !task.checked
+  })
+
+  // Applying leave animation to completed tasks
+  completed.forEach(function (task) {
+    task.enterAnimation = false
+    task.leaveAnimation = true
+  })
+
+  // Wait for the animation to end
+  setTimeout(function () {
+    allTasks.value = notCompleted
+    updateStoragedTasks()
+  }, 500)  
+}
 
 /**
 * For seeing animation only when manually adding or deleting a task
@@ -212,6 +233,14 @@ function reorderItems(task) {
 function resetDraggedItemIndex() {
   draggedItemIndex.value = null
 }
+
+// For 'Delete all completed' button
+const areThereCompleted = computed(() => {
+  const completed =  allTasks.value.filter(function (task) {
+    return task.checked
+  })
+  return completed.length > 0
+})
 
 onMounted(() => {
   // Reading localStorage
@@ -360,7 +389,18 @@ onMounted(() => {
             />
           </div>
         </li>  
-      </menu>
+      </menu>      
+    </div>
+
+    <!-- Delete completed tasks button. Not visible when seeing Pending -->
+    <div 
+      v-if="(showChecked || showAll) && areThereCompleted"
+      class="tasks__delete-completed"
+    >
+      <button
+        type="button" 
+        @click="deleteCompletedTasks"   
+      >Borrar completadas</button>
     </div>
 
     <div>   
