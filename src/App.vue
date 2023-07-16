@@ -240,11 +240,11 @@ function resetDraggedItemIndex() {
 }
 
 // For 'Delete all completed' button
-const areThereCompleted = computed(() => {
+const severalCompleted = computed(() => {
   const completed =  allTasks.value.filter(function (task) {
     return task.checked
   })
-  return completed.length > 0
+  return completed.length > 1
 })
 
 onMounted(() => {
@@ -399,7 +399,7 @@ onMounted(() => {
 
     <!-- Delete completed tasks button. Not visible when seeing Pending -->
     <div 
-      v-if="(showChecked || showAll) && areThereCompleted"
+      v-if="(showChecked || showAll) && severalCompleted"
       class="tasks__delete-completed"
     >
       <button
