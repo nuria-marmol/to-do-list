@@ -120,6 +120,11 @@ function deleteCompletedTasks() {
   setTimeout(function () {
     allTasks.value = notCompleted
     updateStoragedTasks()
+    // In case we delete all tasks
+    if (allTasks.value.length === 0) {
+      // Show 'There are no tasks...' paragraph
+      noTasks.value = true
+    }
   }, 500)  
 }
 
